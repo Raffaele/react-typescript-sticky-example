@@ -1,7 +1,7 @@
 import StickyDivOnScroll from "./components/StickyElement/StickyDivOnScroll";
+import { Filler } from "./components/Filler";
 
 import appStyles from "./App.module.css";
-import { Filler } from "./components/Filler";
 
 function App() {
   return (

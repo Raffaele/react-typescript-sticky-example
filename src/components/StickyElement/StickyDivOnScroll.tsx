@@ -52,9 +52,7 @@ const StickyDivOnScroll: React.FC<StickyDivOnScrollProps> = ({
         <div
           style={{ height: placeholderHeight, visibility: "hidden" }}
           ref={placeholderRef}
-        >
-          Pippo
-        </div>
+        ></div>
       )}
 
       <div ref={stickyRef} className={isSticky ? styles.stickyDiv : ""}>
