@@ -8,7 +8,7 @@ function App() {
     <div className={appStyles.appContainer}>
       <h1>Main Header</h1>
       <Filler startIndex={0} numberOfElements={10} />
-      <StickyDivOnScroll throttleInterval={500}>
+      <StickyDivOnScroll stickyCheckDelay={500}>
         <div className={appStyles.stickyContentStyle}>
           <h2>This DIV bcame sticky!</h2>
           <p>Scroll up and down to see the effect.</p>

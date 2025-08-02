@@ -11,12 +11,12 @@ import { useThrottledCallback } from "../../hooks/useThrottledCallback";
 
 type StickyDivOnScrollProps = {
   children: ReactNode;
-  throttleInterval?: number;
+  stickyCheckDelay?: number;
 };
 
 const StickyDivOnScroll: React.FC<StickyDivOnScrollProps> = ({
   children,
-  throttleInterval = 0,
+  stickyCheckDelay = 0,
 }) => {
   const [isSticky, setSticky] = useState(false);
   const stickyRef = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ const StickyDivOnScroll: React.FC<StickyDivOnScrollProps> = ({
     setSticky(stickyRef.current.getBoundingClientRect().top <= 0);
   }, [stickyRef, placeholderRef, setSticky, isSticky]);
 
-  const optimizedScroll = useThrottledCallback(handleScroll, throttleInterval);
+  const optimizedScroll = useThrottledCallback(handleScroll, stickyCheckDelay);
 
   useEffect(() => {
     const abortController = new AbortController();
