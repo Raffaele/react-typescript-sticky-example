@@ -1,16 +1,39 @@
-import React, { useState, useEffect, useRef, type ReactNode } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  type ReactNode,
+  useCallback,
+} from "react";
 
 import styles from "./StickyDivOnScroll.module.css";
+import { useThrottledCallback } from "../../hooks/useThrottledCallback";
 
 type StickyDivOnScrollProps = {
   children: ReactNode;
+  throttleInterval?: number;
 };
 
-const StickyDivOnScroll: React.FC<StickyDivOnScrollProps> = ({ children }) => {
+const StickyDivOnScroll: React.FC<StickyDivOnScrollProps> = ({
+  children,
+  throttleInterval = 0,
+}) => {
   const [isSticky, setSticky] = useState(false);
   const stickyRef = useRef<HTMLDivElement>(null);
   const placeholderRef = useRef<HTMLDivElement>(null);
   const [placeholderHeight, setPlaceholderHeight] = useState(0);
+
+  const handleScroll = useCallback(() => {
+    if (!stickyRef.current) return;
+    if (placeholderRef.current) {
+      if (placeholderRef.current.getBoundingClientRect().top >= 0)
+        setSticky(false);
+      return;
+    }
+    setSticky(stickyRef.current.getBoundingClientRect().top <= 0);
+  }, [stickyRef, placeholderRef, setSticky, isSticky]);
+
+  const optimizedScroll = useThrottledCallback(handleScroll, throttleInterval);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -18,19 +41,7 @@ const StickyDivOnScroll: React.FC<StickyDivOnScrollProps> = ({ children }) => {
       setPlaceholderHeight(stickyRef.current.offsetHeight);
     }
 
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (!stickyRef.current) return;
-        if (placeholderRef.current) {
-          if (placeholderRef.current.getBoundingClientRect().top >= 0)
-            setSticky(false);
-          return;
-        }
-        setSticky(stickyRef.current.getBoundingClientRect().top <= 0);
-      },
-      abortController
-    );
+    window.addEventListener("scroll", optimizedScroll, abortController);
 
     return () => abortController.abort();
   }, [setPlaceholderHeight, stickyRef, placeholderRef, setSticky, isSticky]);
