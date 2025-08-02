@@ -1,0 +1,9 @@
+.section {
+  line-height: 1.6;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
